@@ -1,0 +1,15 @@
+package com.sprinboot.exceptions;
+
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+	@ExceptionHandler(OrderNotFound.class)
+	public String handleOrderNotFoundException(OrderNotFound ex) {
+	
+		return ex.getMessage();
+		
+	}
+}

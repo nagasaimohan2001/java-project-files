@@ -1,0 +1,8 @@
+package com.sprinboot.dto;
+
+public class ProductDTO {
+	
+	private String productName;
+	private double price;
+	private double discount;
+}

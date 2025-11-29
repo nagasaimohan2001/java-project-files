@@ -1,0 +1,5 @@
+package com.sprinbootjpa.srvice;
+
+public class UserService {
+
+}

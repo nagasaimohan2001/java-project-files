@@ -1,0 +1,11 @@
+package com.sprinboot.service;
+
+import java.util.List;
+
+import com.sprinboot.dto.OrderRequestDTO;
+
+public interface OrderService {
+	
+	public void placeOrder(List<OrderRequestDTO> orderRequestDTO);
+
+}

@@ -1,0 +1,5 @@
+package com.sprinbootjpa.model;
+
+public class User {
+
+}

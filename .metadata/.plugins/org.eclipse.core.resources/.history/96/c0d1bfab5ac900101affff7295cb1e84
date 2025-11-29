@@ -1,0 +1,5 @@
+package com.sprinbootjpa.repository;
+
+public class UserRepository {
+
+}

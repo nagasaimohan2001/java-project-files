@@ -1,0 +1,37 @@
+package com.sprinboot.service.impl;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.sprinboot.dao.ProductRepository;
+import com.sprinboot.dto.ProductRequestDTO;
+import com.sprinboot.dto.ProductResponseDTO;
+import com.sprinboot.model.Product;
+import com.sprinboot.service.ProductService;
+
+@Service
+public class ProductServiceImpl implements ProductService {
+	@Autowired
+	ProductRepository productRepo;
+
+	@Override
+	public ProductResponseDTO save(ProductRequestDTO productRequestDto) {
+		// TODO Auto-generated method stub
+		Product product=new Product();
+		product.setProductName(productRequestDto.getProductName());
+		product.setPrice(productRequestDto.getPrice());
+		product.setDiscount(productRequestDto.getDiscount());
+		if(product.getStock()>0) {
+			product.setAvailable(true);
+		}
+		product.setStock(productRequestDto.getStock());
+		
+		Product savedProduct = productRepo.save(product);
+		ProductResponseDTO productDTO = new ProductResponseDTO();
+		BeanUtils.copyProperties(savedProduct,productDTO);
+		return productDTO;
+		
+	}
+
+}

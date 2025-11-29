@@ -1,0 +1,74 @@
+package com.sprinboot.service.impl;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.sprinboot.dao.OrderRepository;
+import com.sprinboot.dao.ProductRepository;
+import com.sprinboot.dto.OrderItemResponseDTO;
+import com.sprinboot.dto.OrderRequestDTO;
+import com.sprinboot.dto.OrderResponseDTO;
+import com.sprinboot.model.Order;
+import com.sprinboot.model.OrderItem;
+import com.sprinboot.model.Product;
+import com.sprinboot.service.OrderService;
+
+@Service
+public class OrderServiceImpl implements OrderService{
+	@Autowired
+	ProductRepository productRepo;
+	@Autowired
+	OrderRepository orderRepo;
+
+	@Override
+	public OrderResponseDTO placeOrder(List<OrderRequestDTO> orderRequestDTO) {
+		
+		Order order=new Order();
+		order.setStatus("Ordered");
+		List<OrderItem> orderItems=new ArrayList<>();
+		
+		for(OrderRequestDTO orderRequest: orderRequestDTO) {
+			OrderItem orderItem= new OrderItem();
+			Product product=productRepo.findById(orderRequest.getProductId()).get();
+			if(product.getStock()>orderRequest.getQuantity()) {
+				orderItem.setQuantity(orderRequest.getQuantity());
+				orderItem.setProduct(product);
+				orderItem.setOrder(order);
+				orderItems.add(orderItem);
+				productRepo.updateStock(product.getProductId(),product.getStock()-orderRequest.getQuantity());
+			}
+			
+		}
+		
+		order.setOrderItems(orderItems);
+		Order savedOrder = orderRepo.save(order);
+		
+		OrderResponseDTO orderResponseDTO = new OrderResponseDTO();
+		orderResponseDTO.setOrderId(savedOrder.getOrderId());
+		orderResponseDTO.setStatus(savedOrder.getStatus());
+		List<OrderItemResponseDTO> orderItemsDTO=new ArrayList<>();
+		double totalOrderAmount=0;
+		for(OrderItem ordeItem : order.getOrderItems()) {
+			OrderItemResponseDTO orderItemdto=new OrderItemResponseDTO();
+			orderItemdto.setProductId(ordeItem.getProduct().getProductId());
+			orderItemdto.setProductName(ordeItem.getProduct().getProductName());
+			orderItemdto.setQuantity(ordeItem.getQuantity());
+			double eachProductPrice=(ordeItem.getProduct().getPrice()*((100-ordeItem.getProduct().getDiscount())/100));
+			orderItemdto.setEachProductPrice(eachProductPrice);
+			double totalProductPrice=(eachProductPrice)*ordeItem.getQuantity();
+			orderItemdto.setTotalProductPrice(totalProductPrice);
+			totalOrderAmount+=totalProductPrice;
+			orderItemsDTO.add(orderItemdto);
+		}
+		orderResponseDTO.setOrderItems(orderItemsDTO);
+		orderResponseDTO.setTotalAmount(totalOrderAmount);
+		
+		return orderResponseDTO;
+		
+		
+	}
+
+}

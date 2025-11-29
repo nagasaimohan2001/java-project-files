@@ -1,0 +1,16 @@
+package com.sprinboot.service;
+
+import java.util.List;
+
+import com.sprinboot.dto.ProductRequestDTO;
+import com.sprinboot.dto.ProductResponseDTO;
+
+public interface ProductService {
+	
+	public ProductResponseDTO save(ProductRequestDTO productRequestDto);
+	
+	public List<ProductResponseDTO> getAllProducts();
+
+	public ProductResponseDTO getProduct(long id);
+
+}

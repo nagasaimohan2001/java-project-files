@@ -1,0 +1,38 @@
+package com.sprinboot.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.sprinboot.dto.OrderRequestDTO;
+import com.sprinboot.dto.OrderResponseDTO;
+import com.sprinboot.service.OrderService;
+
+import io.micrometer.core.annotation.Counted;
+import io.micrometer.core.annotation.Timed;
+
+@RestController
+public class OrderController {
+	@Autowired
+	OrderService orderService;
+	@PostMapping("/buy")
+	
+	@Timed(value="order.placed.time")
+	@Counted(value="order.get.count")
+	public  OrderResponseDTO placeOrder(@RequestBody List<OrderRequestDTO> orderRequestDTO) {
+		return orderService.placeOrder(orderRequestDTO);
+	}
+	
+	
+	@GetMapping("{orderId}")
+		public ResponseEntity<OrderResponseDTO> getOrderDetails(@PathVariable(name="orderId") long orderId) {
+			return orderService.getOrderDetails(orderId);
+		}
+	
+}

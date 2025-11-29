@@ -1,0 +1,17 @@
+package com.sprinboot.controller;
+
+import java.util.List;
+
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.sprinboot.dto.OrderRequestDTO;
+
+@RestController
+public class OrderController {
+	@PostMapping("/buy")
+	public void placeOrder(@RequestBody List<OrderRequestDTO> orderRequestDTO) {
+		
+	}
+}

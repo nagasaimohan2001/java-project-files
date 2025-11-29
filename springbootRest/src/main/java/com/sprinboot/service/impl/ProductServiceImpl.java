@@ -1,0 +1,62 @@
+package com.sprinboot.service.impl;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.sprinboot.dao.ProductRepository;
+import com.sprinboot.dto.ProductRequestDTO;
+import com.sprinboot.dto.ProductResponseDTO;
+import com.sprinboot.model.Product;
+import com.sprinboot.service.ProductService;
+
+@Service
+public class ProductServiceImpl implements ProductService {
+	@Autowired
+	ProductRepository productRepo;
+
+	@Override
+	public ProductResponseDTO save(ProductRequestDTO productRequestDto) {
+		// TODO Auto-generated method stub
+		Product product=new Product();
+		product.setProductName(productRequestDto.getProductName());
+		product.setPrice(productRequestDto.getPrice());
+		product.setDiscount(productRequestDto.getDiscount());
+		product.setStock(productRequestDto.getStock());
+		if(product.getStock()>0) {
+			product.setAvailable(true);
+		}
+		
+		
+		Product savedProduct = productRepo.save(product);
+		ProductResponseDTO productDTO = new ProductResponseDTO();
+		BeanUtils.copyProperties(savedProduct,productDTO);
+		return productDTO;
+		
+	}
+
+	@Override
+	public List<ProductResponseDTO> getAllProducts() {
+		List<Product> products=productRepo.findAll();
+		List<ProductResponseDTO> productResposonseList= new ArrayList<>();
+		for(Product product:products) {
+			ProductResponseDTO productResponse=new ProductResponseDTO();
+			BeanUtils.copyProperties(product,productResponse);
+			productResposonseList.add(productResponse);
+		}
+		return productResposonseList;
+	}
+
+	@Override
+	public ProductResponseDTO getProduct(long id) {
+		Product product=productRepo.findById(id).get();
+		ProductResponseDTO productResponse=new ProductResponseDTO();
+		BeanUtils.copyProperties(product, productResponse);
+		return productResponse;
+	}
+
+}

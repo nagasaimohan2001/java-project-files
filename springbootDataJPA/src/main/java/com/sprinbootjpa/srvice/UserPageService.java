@@ -1,0 +1,26 @@
+package com.sprinbootjpa.srvice;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+
+import com.sprinbootjpa.model.User;
+import com.sprinbootjpa.repository.UserRepository;
+
+@Service
+public class UserPageService {
+
+	@Autowired
+	UserRepository userRepo;
+	
+	
+	public Page<User> getUserByPage(int pageNumber,int size) {
+		Sort ascending=Sort.by("age").ascending();
+		PageRequest pageRequest=PageRequest.of(pageNumber,size,ascending);
+		Page<User> all = userRepo.findAll(pageRequest);
+		return all;
+	}
+}
+
