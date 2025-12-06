@@ -1,0 +1,26 @@
+package com.sprinbootjpa.srvice;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.sprinbootjpa.model.User;
+import com.sprinbootjpa.repository.UserRepository;
+
+@Service
+public class UserService {
+
+	@Autowired
+	UserRepository userRepository;
+	
+	public String saveUser() {
+		User user=new User("Nagasai Mohan",24);
+		User savedUser=userRepository.save(user);
+		return savedUser.getName();
+		
+	}
+	public User getUserByName(String name) {
+		User user=userRepository.findByName(name);
+		return user;
+		
+	}
+}

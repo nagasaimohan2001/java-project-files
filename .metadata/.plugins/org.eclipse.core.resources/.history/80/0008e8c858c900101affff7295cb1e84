@@ -1,0 +1,5 @@
+package com.sprinbootjpa.controller;
+
+public class UserController {
+
+}

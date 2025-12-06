@@ -1,0 +1,5 @@
+package com.sprinboot.dto;
+
+public class ProductDTO {
+
+}

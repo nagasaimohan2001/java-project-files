@@ -1,0 +1,54 @@
+package com.sprinboot.service.impl;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.sprinboot.dao.OrderRepository;
+import com.sprinboot.dao.ProductRepository;
+import com.sprinboot.dto.OrderRequestDTO;
+import com.sprinboot.dto.OrderResponseDTO;
+import com.sprinboot.model.Order;
+import com.sprinboot.model.OrderItem;
+import com.sprinboot.model.Product;
+import com.sprinboot.service.OrderService;
+
+@Service
+public class OrderServiceImpl implements OrderService{
+	@Autowired
+	ProductRepository productRepo;
+	@Autowired
+	OrderRepository orderRepo;
+
+	@Override
+	public OrderResponseDTO placeOrder(List<OrderRequestDTO> orderRequestDTO) {
+		
+		Order order=new Order();
+		order.setStatus("Ordered");
+		List<OrderItem> orderItems=new ArrayList<>();
+		
+		for(OrderRequestDTO orderRequest: orderRequestDTO) {
+			OrderItem orderItem= new OrderItem();
+			Product product=productRepo.findById(orderRequest.getProductId()).get();
+			if(product.getStock()>orderRequest.getQuantity()) {
+				orderItem.setQuantity(orderRequest.getQuantity());
+				orderItem.setProduct(product);
+				orderItem.setOrder(order);
+				orderItems.add(orderItem);
+				productRepo.updateStock(orderRequest.getProductId(),product.getStock()-orderRequest.getQuantity());
+			}
+			
+		}
+		
+		order.setOrderItems(orderItems);
+		Order savedOrder = orderRepo.save(order);
+		
+		
+		return orderItems;
+		
+		
+	}
+
+}

@@ -1,0 +1,17 @@
+package com.sprinbootjpa.srvice;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.sprinbootjpa.controller.UserController;
+
+@Service
+public class UserService {
+
+	@Autowired
+	UserController userController;
+	
+	public void saveUser() {
+		
+	}
+}
